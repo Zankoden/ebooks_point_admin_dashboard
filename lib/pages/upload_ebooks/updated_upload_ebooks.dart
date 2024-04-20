@@ -15,6 +15,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -377,7 +378,7 @@ class EbookUploadPage extends StatelessWidget {
               }),
             ),
           ),
-          if (Responsive.isDesktop(context))  ProfilePage(),
+          if (Responsive.isDesktop(context)) ProfilePage(),
         ],
       ),
     );

@@ -1,5 +1,5 @@
-import 'package:ebooks_point_admin/pages/ebooks/controller/view_author_ebooks_controller.dart';
-import 'package:ebooks_point_admin/pages/ebooks/edit_ebooks.dart';
+import 'package:ebooks_point_admin/pages/ebooks/controllers/author/view_author_ebooks_controller.dart';
+import 'package:ebooks_point_admin/pages/ebooks/views_edit_ebook_common/edit_ebooks.dart';
 import 'package:ebooks_point_admin/pages/profile/profile.dart';
 import 'package:ebooks_point_admin/responsive.dart';
 import 'package:ebooks_point_admin/widgets/custom_app_bar_title.dart';

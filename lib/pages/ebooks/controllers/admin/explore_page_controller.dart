@@ -31,9 +31,10 @@ class ExplorePageController extends GetxController {
     getRecommendedCategoryBooks();
   }
 
-   Future<List<Ebook>> fetchEbooks() async {
+  Future<List<Ebook>> fetchEbooks() async {
     try {
       var response = await http.get(Uri.parse(APIService.fetchEbooksURL));
+      log("All Fetched Ebooks: ${response.body}");
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         if (jsonData is List) {

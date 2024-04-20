@@ -1,7 +1,8 @@
 import 'package:ebooks_point_admin/constants/text_strings.dart';
-import 'package:ebooks_point_admin/main.dart';
 import 'package:ebooks_point_admin/pages/profile/controller/profile_controller.dart';
 import 'package:ebooks_point_admin/responsive.dart';
+import 'package:ebooks_point_admin/themes/controller/theme_controller.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -62,39 +63,67 @@ class ProfilePage extends StatelessWidget {
           children: [
             Row(
               children: [
-                SizedBox(width: Get.width * 0.2),
-                PopupMenuButton<String>(
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuEntry<String>>[
-                    const PopupMenuItem<String>(
-                      value: 'system',
-                      child: Text('System'),
-                    ),
-                    const PopupMenuItem<String>(
-                      value: 'light',
-                      child: Text('Light'),
-                    ),
-                    const PopupMenuItem<String>(
-                      value: 'dark',
-                      child: Text('Dark'),
-                    ),
-                  ],
-                  onSelected: (String mode) {
-                    switch (mode) {
-                      case 'system':
-                        themeController.changeTheme(ThemeMode.system);
-                        break;
-                      case 'light':
-                        themeController.changeTheme(ThemeMode.light);
-                        break;
-                      case 'dark':
-                        themeController.changeTheme(ThemeMode.dark);
-                        break;
-                    }
-                  },
-                ),
+                const SizedBox(width: 18),
+                const Icon(FluentIcons.table_switch_16_filled),
+                const SizedBox(width: 15),
+                const Text("Switch Modes"),
+                // const SizedBox(width: 180),
+                const SizedBox(width: 30),
+                // Icon(Iconsax.toggle_off),
+                Obx(
+                  () => DropdownButton<ThemeMode>(
+                    value: themeController.themeMode.value,
+                    onChanged: (ThemeMode? newValue) {
+                      if (newValue != null) {
+                        themeController.changeTheme(newValue);
+                      }
+                    },
+                    items: ThemeMode.values
+                        .map<DropdownMenuItem<ThemeMode>>((ThemeMode mode) {
+                      return DropdownMenuItem<ThemeMode>(
+                        value: mode,
+                        child: Text(mode.toString().split('.').last),
+                      );
+                    }).toList(),
+                  ),
+                )
               ],
             ),
+            // Row(
+            //   children: [
+            //     SizedBox(width: Get.width * 0.2),
+            //     PopupMenuButton<String>(
+            //       itemBuilder: (BuildContext context) =>
+            //           <PopupMenuEntry<String>>[
+            //         const PopupMenuItem<String>(
+            //           value: 'system',
+            //           child: Text('System'),
+            //         ),
+            //         const PopupMenuItem<String>(
+            //           value: 'light',
+            //           child: Text('Light'),
+            //         ),
+            //         const PopupMenuItem<String>(
+            //           value: 'dark',
+            //           child: Text('Dark'),
+            //         ),
+            //       ],
+            //       onSelected: (String mode) {
+            //         switch (mode) {
+            //           case 'system':
+            //             themeController.changeTheme(ThemeMode.system);
+            //             break;
+            //           case 'light':
+            //             themeController.changeTheme(ThemeMode.light);
+            //             break;
+            //           case 'dark':
+            //             themeController.changeTheme(ThemeMode.dark);
+            //             break;
+            //         }
+            //       },
+            //     ),
+            //   ],
+            // ),
             const SizedBox(
               height: 50,
             ),
