@@ -1,3 +1,5 @@
+import 'package:ebooks_point_admin/api/api_services.dart';
+
 class User {
   bool? success;
   List<Users>? users;
@@ -60,7 +62,7 @@ class Users {
     phoneNumber = json['phone_number'];
     password = json['password'];
     type = json['type'];
-    profileImageUrl = json['profile_image_url'];
+    profileImageUrl = '${APIService.baseURL}/${json['profile_image_url']}';
     membershipId = json['membership_id'];
   }
 

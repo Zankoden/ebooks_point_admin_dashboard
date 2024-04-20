@@ -34,18 +34,15 @@ class EditUserPageController extends GetxController {
         if (responseData['success']) {
           Get.toNamed(AppRoutes.viewAllUsersPage);
           Get.find<ViewAllUsersPageController>().fetchUsers();
-          // User details updated successfully
+
           Get.snackbar('Success', responseData['message']);
         } else {
-          // Failed to update user details
           Get.snackbar('Error', responseData['message']);
         }
       } else {
-        // Server error
         Get.snackbar('Error', 'Failed to communicate with the server');
       }
     } catch (e) {
-      // Exception
       Get.snackbar('Error', 'An error occurred: $e');
     }
   }
@@ -60,7 +57,6 @@ class EditUserPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(EditUserPageController());
 
-    // Set initial values for text fields
     controller.firstNameController.text = user.firstName ?? '';
     controller.lastNameController.text = user.lastName ?? '';
     controller.emailController.text = user.email ?? '';
@@ -73,7 +69,7 @@ class EditUserPage extends StatelessWidget {
       ),
       body: Row(
         children: [
-          if (Responsive.isDesktop(context)) const SideMenuBar(),
+          if (Responsive.isDesktop(context))  SideMenuBar(),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -95,7 +91,6 @@ class EditUserPage extends StatelessWidget {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      // Call update function when save button is pressed
                       controller.updateUserDetails(user.userId!);
                     },
                     child: const Text('Save Changes'),
@@ -104,7 +99,7 @@ class EditUserPage extends StatelessWidget {
               ),
             ),
           ),
-          if (Responsive.isDesktop(context))  ProfilePage(),
+          if (Responsive.isDesktop(context)) ProfilePage(),
         ],
       ),
     );

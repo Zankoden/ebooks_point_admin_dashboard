@@ -15,7 +15,7 @@ class EditEbookPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(EditEbookPageController());
 
-    // Call fetchEbookDetails when the page is initialized
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.fetchEbookDetails(ebookId);
     });
@@ -25,7 +25,7 @@ class EditEbookPage extends StatelessWidget {
         title: const CustomAppBarTitle(title: "Edit Ebook Details"),
       ),
       drawer: Responsive.isMobile(context)
-          ? const Drawer(
+          ?  Drawer(
               child: SideMenuBar(),
             )
           : null,
@@ -36,7 +36,7 @@ class EditEbookPage extends StatelessWidget {
           : null,
       body: Row(
         children: [
-          if (Responsive.isDesktop(context)) const SideMenuBar(),
+          if (Responsive.isDesktop(context))  SideMenuBar(),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),

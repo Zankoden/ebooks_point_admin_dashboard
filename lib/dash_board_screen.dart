@@ -12,17 +12,16 @@ class DashBoardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // automaticallyImplyLeading: false,
         title: const CustomAppBarTitle(
           title: 'Dashboard',
         ),
       ),
       drawer: Responsive.isMobile(context)
-          ? const Drawer(
+          ?  Drawer(
               child: SideMenuBar(),
             )
           : Responsive.isTablet(context)
-              ? const Drawer(
+              ?  Drawer(
                   child: SideMenuBar(),
                 )
               : null,
@@ -38,7 +37,7 @@ class DashBoardPage extends StatelessWidget {
       body: SelectionArea(
         child: Row(
           children: [
-            if (Responsive.isDesktop(context)) const SideMenuBar(),
+            if (Responsive.isDesktop(context))  SideMenuBar(),
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(20),

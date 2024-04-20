@@ -1,4 +1,4 @@
-import 'package:ebooks_point_admin/pages/ebooks/views_edit_ebook_common/edit_ebooks.dart';
+import 'package:ebooks_point_admin/pages/ebooks/edit_ebooks/views/edit_ebooks.dart';
 import 'package:ebooks_point_admin/pages/ebooks/controllers/admin/explore_page_controller.dart';
 import 'package:ebooks_point_admin/pages/profile/profile.dart';
 import 'package:ebooks_point_admin/responsive.dart';
@@ -6,6 +6,7 @@ import 'package:ebooks_point_admin/widgets/custom_app_bar_title.dart';
 import 'package:ebooks_point_admin/widgets/side_menu_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_network/image_network.dart';
 
 class ExplorePage extends StatelessWidget {
   final ExplorePageController controller = Get.put(ExplorePageController());
@@ -19,31 +20,31 @@ class ExplorePage extends StatelessWidget {
         elevation: 2,
         title: const Row(
           children: [
-            CustomAppBarTitle(title: "Explore"),
+            CustomAppBarTitle(title: "View All Ebooks"),
           ],
         ),
       ),
       drawer: Responsive.isMobile(context)
-          ? const Drawer(
+          ? Drawer(
               child: SideMenuBar(),
             )
           : Responsive.isTablet(context)
-              ? const Drawer(
+              ? Drawer(
                   child: SideMenuBar(),
                 )
               : null,
       endDrawer: Responsive.isMobile(context)
-          ?  Drawer(
+          ? Drawer(
               child: ProfilePage(),
             )
           : Responsive.isTablet(context)
-              ?  Drawer(
+              ? Drawer(
                   child: ProfilePage(),
                 )
               : null,
       body: Row(
         children: [
-          if (Responsive.isDesktop(context)) const SideMenuBar(),
+          if (Responsive.isDesktop(context)) SideMenuBar(),
           Expanded(
             child: SingleChildScrollView(
               child: Padding(
@@ -128,11 +129,9 @@ class ExplorePage extends StatelessWidget {
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                         childAspectRatio:
                                             Responsive.isDesktop(context)
-                                                // ? 0.6
                                                 ? 0.55
                                                 : Responsive.isTablet(context)
                                                     ? 0.75
-                                                    // : 0.7,
                                                     : 0.62,
                                         crossAxisCount:
                                             Responsive.isDesktop(context)
@@ -155,7 +154,6 @@ class ExplorePage extends StatelessWidget {
                                           ebookID: ebook.ebookId ?? -1,
                                           description: ebook.description ?? '',
                                           authorName: ebook.authorName ?? '',
-                                          // ebook: const {},
                                         );
                                       },
                                     ),
@@ -169,14 +167,13 @@ class ExplorePage extends StatelessWidget {
               ),
             ),
           ),
-          if (Responsive.isDesktop(context))  ProfilePage(),
+          if (Responsive.isDesktop(context)) ProfilePage(),
         ],
       ),
     );
   }
 }
 
-///
 class SearchGridCell extends StatelessWidget {
   final int index;
   final String bookName;
@@ -185,7 +182,6 @@ class SearchGridCell extends StatelessWidget {
   final int ebookID;
   final String authorName;
   final String description;
-  // final Map<String, dynamic> ebook;
 
   SearchGridCell({
     super.key,
@@ -196,7 +192,6 @@ class SearchGridCell extends StatelessWidget {
     required this.index,
     required this.description,
     required this.authorName,
-    // required this.ebook,
   });
 
   final c = Get.put(ExplorePageController());
@@ -213,21 +208,18 @@ class SearchGridCell extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                imagePath,
-                width: Responsive.bookImageWidth(context),
+              child: ImageNetwork(
+                image: imagePath,
                 height: Responsive.bookImageHeight(context),
-                fit: BoxFit.cover,
-                errorBuilder: (BuildContext context, Object exception,
-                    StackTrace? stackTrace) {
-                  return Image.asset(
-                    'assets/default_img.jpg',
-                    width: Responsive.bookImageWidth(context),
-                    height: Responsive.bookImageHeight(context) *
-                        0.85, // Adjust height as needed
-                    fit: BoxFit.cover,
-                  );
-                },
+                width: Responsive.bookImageWidth(context),
+                duration: 100,
+                onPointer: true,
+                onLoading: const SizedBox(),
+                onError: Image.asset(
+                  'assets/default_img.jpg',
+                  height: Responsive.bookImageHeight(context),
+                  width: Responsive.bookImageWidth(context),
+                ),
               ),
             ),
           ),
@@ -236,7 +228,7 @@ class SearchGridCell extends StatelessWidget {
             maxLines: 1,
             textAlign: TextAlign.center,
             style: const TextStyle(
-                color: Colors.black,
+                // color: Colors.black,
                 fontSize: 17,
                 fontWeight: FontWeight.w700,
                 overflow: TextOverflow.ellipsis),
@@ -244,7 +236,6 @@ class SearchGridCell extends StatelessWidget {
           Flexible(
             child: Row(
               children: [
-                // SizedBox(width: Responsive.bookImageWidth(context) * (1 / 10)),
                 const SizedBox(width: 50),
                 Tooltip(
                   message: 'Edit',
@@ -258,7 +249,6 @@ class SearchGridCell extends StatelessWidget {
                     ),
                   ),
                 ),
-                // SizedBox(width: Responsive.bookImageWidth(context) * (6 / 10)),
                 const SizedBox(width: 5),
                 Tooltip(
                   message: 'Delete',
@@ -272,7 +262,6 @@ class SearchGridCell extends StatelessWidget {
                     ),
                   ),
                 ),
-                // SizedBox(width: Responsive.bookImageWidth(context) * (1 / 10)),
               ],
             ),
           ),
@@ -293,7 +282,6 @@ class SearchGridCell extends StatelessWidget {
           actions: [
             ElevatedButton(
               onPressed: () {
-                // Close the dialog and delete ebook
                 controller.deleteEbook(ebookId);
                 Navigator.of(context).pop();
               },
@@ -301,7 +289,6 @@ class SearchGridCell extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                // Close the dialog
                 Navigator.of(context).pop();
               },
               child: const Text('No'),

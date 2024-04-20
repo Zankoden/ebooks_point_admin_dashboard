@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:ebooks_point_admin/api/api_services.dart';
-import 'package:ebooks_point_admin/model/test/category_model.dart';
+import 'package:ebooks_point_admin/model/category_model.dart';
 import 'package:ebooks_point_admin/pages/profile/profile.dart';
 import 'package:ebooks_point_admin/responsive.dart';
 import 'package:ebooks_point_admin/widgets/custom_app_bar_title.dart';
@@ -15,6 +15,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
+
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
@@ -25,8 +26,7 @@ class EbookUploadController extends GetxController {
   final TextEditingController descriptionController = TextEditingController();
   final Rx<dynamic> thumbnailFile = Rx<dynamic>(null);
   final Rx<dynamic> pdfFile = Rx<dynamic>(null);
-  final RxInt selectedCategoryId =
-      RxInt(0); // RxInt for reactive state management
+  final RxInt selectedCategoryId = RxInt(0);
   final RxBool isUploading = RxBool(false);
 
   Widget? thumbnailPreview;
@@ -39,7 +39,7 @@ class EbookUploadController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchCategories(this); // Fetch categories when controller initializes
+    fetchCategories(this);
   }
 
   static Future<void> fetchCategories(EbookUploadController controller) async {
@@ -49,7 +49,7 @@ class EbookUploadController extends GetxController {
         var jsonData = jsonDecode(response.body);
         List<Category> fetchedCategories =
             categoryFromJson(jsonEncode(jsonData));
-        // Assign fetched categories to the observable list
+
         controller.categories.assignAll(fetchedCategories);
       } else {
         throw Exception('Failed to load categories: ${response.body}');
@@ -157,9 +157,8 @@ class EbookUploadController extends GetxController {
         ..fields['title'] = titleController.text
         ..fields['description'] = descriptionController.text
         ..fields['category_id'] = selectedCategory.value!.categoryId.toString()
-        ..fields['user_id'] = userId.toString(); // Add user ID here
+        ..fields['user_id'] = userId.toString();
 
-      // Handle files
       final thumbnailBytes = await _readFileBytes(thumbnailFile.value);
       final pdfBytes = await _readFileBytes(pdfFile.value);
 
@@ -177,16 +176,13 @@ class EbookUploadController extends GetxController {
         if (data['success']) {
           Get.snackbar('Success', 'Ebook uploaded successfully');
         } else {
-          // Display error message from server
           Get.snackbar('Error', 'Failed to upload ebook: ${data['message']}');
         }
       } else {
-        // Display generic error message
         Get.snackbar('Error',
             'Failed to upload ebook. Server returned status code: ${response.statusCode}');
       }
 
-      // Reset state after upload
       titleController.clear();
       descriptionController.clear();
       thumbnailFile.value = null;
@@ -195,7 +191,6 @@ class EbookUploadController extends GetxController {
       pdfPreview = null;
       update();
     } catch (e) {
-      // Log and display error
       log('Error uploading ebook: $e');
       Get.snackbar(
         'Error',
@@ -208,84 +203,6 @@ class EbookUploadController extends GetxController {
       isUploading.value = false;
     }
   }
-
-  // Future<void> uploadEbook() async {
-
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     int? userId = prefs.getInt('user_id');
-
-  //   if (titleController.text.isEmpty ||
-  //       descriptionController.text.isEmpty ||
-  //       thumbnailFile.value == null ||
-  //       pdfFile.value == null ||
-  //       selectedCategory.value == null) {
-  //     Get.snackbar(
-  //       'Error',
-  //       'All fields are compulsory. Please fill in the details, select a category, and choose thumbnail and PDF files.',
-  //       snackPosition: SnackPosition.BOTTOM,
-  //       backgroundColor: Colors.red,
-  //       colorText: Colors.white,
-  //     );
-  //     return;
-  //   }
-
-  //   try {
-  //     isUploading.value = true;
-  //     final url = Uri.parse('${APIService.baseURL}/upload_ebook.php');
-  //     var request = http.MultipartRequest('POST', url)
-  //       ..fields['title'] = titleController.text
-  //       ..fields['description'] = descriptionController.text
-  //       ..fields['category_id'] = selectedCategory.value!.categoryId.toString();
-
-  //     // Handle files
-  //     final thumbnailBytes = await _readFileBytes(thumbnailFile.value);
-  //     final pdfBytes = await _readFileBytes(pdfFile.value);
-
-  //     request.files.add(http.MultipartFile.fromBytes(
-  //         'thumbnail', thumbnailBytes,
-  //         filename: 'thumbnail.jpg'));
-  //     request.files.add(
-  //         http.MultipartFile.fromBytes('pdf', pdfBytes, filename: 'ebook.pdf'));
-
-  //     final streamedResponse = await request.send();
-  //     final response = await http.Response.fromStream(streamedResponse);
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       if (data['success']) {
-  //         Get.snackbar('Success', 'Ebook uploaded successfully');
-  //       } else {
-  //         // Display error message from server
-  //         Get.snackbar('Error', 'Failed to upload ebook: ${data['message']}');
-  //       }
-  //     } else {
-  //       // Display generic error message
-  //       Get.snackbar('Error',
-  //           'Failed to upload ebook. Server returned status code: ${response.statusCode}');
-  //     }
-
-  //     // Reset state after upload
-  //     titleController.clear();
-  //     descriptionController.clear();
-  //     thumbnailFile.value = null;
-  //     pdfFile.value = null;
-  //     thumbnailPreview = null;
-  //     pdfPreview = null;
-  //     update();
-  //   } catch (e) {
-  //     // Log and display error
-  //     log('Error uploading ebook: $e');
-  //     Get.snackbar(
-  //       'Error',
-  //       'An error occurred while uploading the ebook. Please try again.',
-  //       snackPosition: SnackPosition.BOTTOM,
-  //       backgroundColor: Colors.red,
-  //       colorText: Colors.white,
-  //     );
-  //   } finally {
-  //     isUploading.value = false;
-  //   }
-  // }
 }
 
 class EbookUploadPage extends StatelessWidget {
@@ -299,87 +216,160 @@ class EbookUploadPage extends StatelessWidget {
       appBar: AppBar(
         title: const CustomAppBarTitle(title: 'Upload Ebook'),
       ),
+      drawer: Responsive.isMobile(context)
+          ? Drawer(
+              child: SideMenuBar(),
+            )
+          : Responsive.isTablet(context)
+              ? Drawer(
+                  child: SideMenuBar(),
+                )
+              : null,
+      endDrawer: Responsive.isMobile(context)
+          ? Drawer(
+              child: ProfilePage(),
+            )
+          : Responsive.isTablet(context)
+              ? Drawer(
+                  child: ProfilePage(),
+                )
+              : null,
       body: Row(
         children: [
-          if (Responsive.isDesktop(context)) const SideMenuBar(),
+          if (Responsive.isDesktop(context)) SideMenuBar(),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Obx(() {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    TextField(
-                      controller: controller.titleController,
-                      decoration: const InputDecoration(
-                        labelText: 'Title',
+                return Center(
+                  child: SizedBox(
+                    width: 500,
+                    child: Card(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            TextField(
+                              controller: controller.titleController,
+                              decoration: const InputDecoration(
+                                labelText: 'Title',
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            TextField(
+                              controller: controller.descriptionController,
+                              decoration: const InputDecoration(
+                                labelText: 'Description',
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            DropdownButtonFormField<Category>(
+                              value: controller.selectedCategory.value,
+                              onChanged: (Category? value) {
+                                if (value != null) {
+                                  controller.selectedCategory.value = value;
+                                }
+                              },
+                              items: controller.categories
+                                  .map<DropdownMenuItem<Category>>((category) {
+                                return DropdownMenuItem<Category>(
+                                  value: category,
+                                  child: Text(category.categoryName.toString()),
+                                );
+                              }).toList(),
+                              decoration: const InputDecoration(
+                                labelText: 'Category',
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            _buildElevatedButton(
+                              onPressed: () => controller.pickThumbnail(),
+                              label: 'Pick Thumbnail',
+                              preview: controller.thumbnailPreview,
+                            ),
+                            // ElevatedButton(
+                            //   onPressed: () => controller.pickThumbnail(),
+                            //   child: const Text('Pick Thumbnail'),
+                            // ),
+                            const SizedBox(height: 16),
+                            _buildElevatedButton(
+                              onPressed: () => controller.pickPdf(),
+                              label: 'Pick PDF',
+                              preview: controller.pdfPreview,
+                            ),
+                            // ElevatedButton(
+                            //   onPressed: () => controller.pickPdf(),
+                            //   child: const Text('Pick PDF'),
+                            // ),
+                            const SizedBox(height: 16),
+                            // ElevatedButton(
+                            //   style: const ButtonStyle(
+                            //     animationDuration: Durations.long1,
+                            //     elevation: MaterialStatePropertyAll(10),
+                            //   ),
+                            //   onPressed: () => controller.uploadEbook(),
+                            //   child: const Text('Upload Ebook'),
+                            // ),
+                            _buildElevatedButton(
+                              onPressed: () => controller.uploadEbook(),
+                              label: 'Upload Ebook',
+                              isLoading: controller.isUploading.value,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: controller.descriptionController,
-                      decoration: const InputDecoration(
-                        labelText: 'Description',
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<Category>(
-                      value: controller.selectedCategory.value,
-                      onChanged: (Category? value) {
-                        if (value != null) {
-                          controller.selectedCategory.value = value;
-                        }
-                      },
-                      items: controller.categories
-                          .map<DropdownMenuItem<Category>>((category) {
-                        return DropdownMenuItem<Category>(
-                          value: category,
-                          child: Text(category.categoryName.toString()),
-                        );
-                      }).toList(),
-                      decoration: const InputDecoration(
-                        labelText: 'Category',
-                      ),
-                    ),
-
-                    // DropdownButtonFormField<int>(
-                    //   value: controller.selectedCategoryId.value,
-                    //   onChanged: (value) =>
-                    //       controller.selectedCategoryId.value = value!,
-                    //   items: controller.categories
-                    //       .map<DropdownMenuItem<int>>((category) {
-                    //     return DropdownMenuItem<int>(
-                    //       value: category.categoryId, // Change categoryId to id
-                    //       child: Text(category.categoryName
-                    //           .toString()), // Change categoryName to name
-                    //     );
-                    //   }).toList(),
-                    //   decoration: const InputDecoration(
-                    //     labelText: 'Category',
-                    //   ),
-                    // ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () => controller.pickThumbnail(),
-                      child: const Text('Pick Thumbnail'),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () => controller.pickPdf(),
-                      child: const Text('Pick PDF'),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () => controller.uploadEbook(),
-                      child: const Text('Upload Ebook'),
-                    ),
-                  ],
+                  ),
                 );
               }),
             ),
           ),
           if (Responsive.isDesktop(context)) ProfilePage(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildElevatedButton({
+    required VoidCallback onPressed,
+    required String label,
+    Widget? preview,
+    bool isLoading = false,
+  }) {
+    return InkWell(
+      onTap: onPressed,
+      child: Center(
+        child: Container(
+          height: 60,
+          width: 500,
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: isLoading
+                ? const CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        label,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      if (preview != null) preview,
+                    ],
+                  ),
+          ),
+        ),
       ),
     );
   }

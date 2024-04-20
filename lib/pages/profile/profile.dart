@@ -22,11 +22,7 @@ class ProfilePage extends StatelessWidget {
             bottomLeft:
                 Radius.circular(Responsive.isMobile(context) ? 10 : 30.0),
             topLeft: Radius.circular(Responsive.isMobile(context) ? 10 : 30.0),
-            // bottomLeft: Radius.circular(30.0),
-            // topLeft: Radius.circular(30.0),
           ),
-          // color: const Color(0xFF21222D),
-          // color: const Color.fromARGB(255, 208, 208, 214),
         ),
         child: FutureBuilder<void>(
           future: profileController.getUserInfo(),
@@ -39,7 +35,6 @@ class ProfilePage extends StatelessWidget {
             } else {
               return Obx(() {
                 if (profileController.userInfo.value != null) {
-                  // return _buildProfileContent(context);
                   return _buildProfileContent(
                       profileController.userInfo.value!, context);
                 } else {
@@ -67,9 +62,7 @@ class ProfilePage extends StatelessWidget {
                 const Icon(FluentIcons.table_switch_16_filled),
                 const SizedBox(width: 15),
                 const Text("Switch Modes"),
-                // const SizedBox(width: 180),
                 const SizedBox(width: 30),
-                // Icon(Iconsax.toggle_off),
                 Obx(
                   () => DropdownButton<ThemeMode>(
                     value: themeController.themeMode.value,
@@ -89,50 +82,31 @@ class ProfilePage extends StatelessWidget {
                 )
               ],
             ),
-            // Row(
-            //   children: [
-            //     SizedBox(width: Get.width * 0.2),
-            //     PopupMenuButton<String>(
-            //       itemBuilder: (BuildContext context) =>
-            //           <PopupMenuEntry<String>>[
-            //         const PopupMenuItem<String>(
-            //           value: 'system',
-            //           child: Text('System'),
-            //         ),
-            //         const PopupMenuItem<String>(
-            //           value: 'light',
-            //           child: Text('Light'),
-            //         ),
-            //         const PopupMenuItem<String>(
-            //           value: 'dark',
-            //           child: Text('Dark'),
-            //         ),
-            //       ],
-            //       onSelected: (String mode) {
-            //         switch (mode) {
-            //           case 'system':
-            //             themeController.changeTheme(ThemeMode.system);
-            //             break;
-            //           case 'light':
-            //             themeController.changeTheme(ThemeMode.light);
-            //             break;
-            //           case 'dark':
-            //             themeController.changeTheme(ThemeMode.dark);
-            //             break;
-            //         }
-            //       },
-            //     ),
-            //   ],
-            // ),
             const SizedBox(
               height: 50,
             ),
-            Image.asset(
-              "profile_image/profile_avatar.png",
+            SizedBox(
+              height: 300,
+              width: 300,
+              // decoration: const BoxDecoration(
+              //   image: DecorationImage(
+              //       image: NetworkImage("profile_image/profile_avatar.png"),
+              //       fit: BoxFit.fill),
+              // ),
+              child: Image.asset(
+                "profile_image/profile_avatar.png",
+                fit: BoxFit.fill,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return Image.asset(
+                    'assets/default_img.jpg',
+                    width: Responsive.bookImageWidth(context),
+                    height: Responsive.bookImageHeight(context) * 0.85,
+                    fit: BoxFit.cover,
+                  );
+                },
+              ),
             ),
-            // const CircleAvatar(
-            //   minRadius: 60,
-            // ),
             const SizedBox(
               height: 15,
             ),
@@ -145,48 +119,40 @@ class ProfilePage extends StatelessWidget {
             ),
             Text(
               "User: ${userInfo['username']}",
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 15,
-                color: Theme.of(context).primaryColor,
               ),
             ),
             Text(
               '${ZText.zFirstName}: ${userInfo['first_name']}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 15,
-                color: Theme.of(context).primaryColor,
               ),
             ),
             Text(
               '${ZText.zLastName}: ${userInfo['last_name']}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 15,
-                color: Theme.of(context).primaryColor,
               ),
             ),
             Text(
               '${ZText.zEmail}: ${userInfo['email']}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 15,
-                color: Theme.of(context).primaryColor,
               ),
             ),
             Text(
               '${ZText.zPhoneNumber}: ${userInfo['phone_number']}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 15,
-                color: Theme.of(context).primaryColor,
               ),
             ),
             Text(
               '${ZText.zRole}: ${userInfo['role']}',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 15,
-                color: Theme.of(context).primaryColor,
               ),
             ),
-
-            ///log out button
             InkWell(
               onTap: () {
                 Get.dialog(
@@ -212,18 +178,16 @@ class ProfilePage extends StatelessWidget {
                 );
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20, vertical: 15), // Adjusted button padding
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                      30), // Increased border radius for a rounded appearance
+                  borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 2,
                       blurRadius: 7,
-                      offset: const Offset(
-                          0, 3), // Added shadow for a raised effect
+                      offset: const Offset(0, 3),
                     ),
                   ],
                   gradient: const LinearGradient(
@@ -238,14 +202,14 @@ class ProfilePage extends StatelessWidget {
                     Icon(
                       Icons.logout,
                       color: Colors.white,
-                      size: 20, // Adjusted icon size
+                      size: 20,
                     ),
                     SizedBox(width: 10),
                     Text(
                       ZText.zLogOut,
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 18, // Adjusted text size
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -253,18 +217,9 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Padding(
-            //   padding:
-            //       // EdgeInsets.all(Responsive.isMobile(context) ? 15 : 20.0),
-            //       EdgeInsets.all(20.0),
-            //   child: const WeightHeightBloodCard(),
-            // ),
             SizedBox(
               height: Responsive.isMobile(context) ? 20 : 40,
-              // height: 40,
             ),
-            // Scheduled()
           ],
         ),
       ),

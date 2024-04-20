@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:ebooks_point_admin/api/api_services.dart';
-import 'package:ebooks_point_admin/model/test/category_model.dart';
-import 'package:ebooks_point_admin/model/test/ebook_model.dart';
+import 'package:ebooks_point_admin/model/category_model.dart';
+import 'package:ebooks_point_admin/model/ebook_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:ebooks_point_admin/responsive.dart';
@@ -13,9 +13,7 @@ import 'package:http/http.dart' as http;
 
 class LineChartCardController extends GetxController {
   RxList<Ebook> books = <Ebook>[].obs;
-// New list for searched items
 
-  // for category filter
   RxList<Category> categories = <Category>[].obs;
 
   Map<String, int> monthlyUploads = {};
@@ -35,10 +33,8 @@ class LineChartCardController extends GetxController {
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         if (jsonData is List) {
-          // If the response is an array of ebooks
           return jsonData.map((ebook) => Ebook.fromJson(ebook)).toList();
         } else if (jsonData is Map) {
-          // If the response is a single ebook
           return [Ebook.fromJson(jsonData as Map<String, dynamic>)];
         } else {
           throw Exception('Invalid response format');
@@ -85,10 +81,8 @@ class LineChartCardController extends GetxController {
 
   Future<void> calculateMonthlyUploads() async {
     try {
-      // Fetch books
       List<Ebook> allBooks = await fetchEbooks();
 
-      // Initialize monthly uploads map
       monthlyUploads = {
         'Jan': 0,
         'Feb': 0,
@@ -104,18 +98,14 @@ class LineChartCardController extends GetxController {
         'Dec': 0,
       };
 
-      // Aggregate uploads per month
       for (var book in allBooks) {
-        // Check if uploadedDate is not null before accessing it
         if (book.uploadedDate != null) {
-          // Extract month from uploadedDate
           String month = book.uploadedDate!.split('-')[1];
           monthlyUploads[month] = monthlyUploads[month]! + 1;
           log("The monthlyUploads: $monthlyUploads");
         }
       }
 
-      // Update the UI (if necessary)
       update();
     } catch (e) {
       log("Log for calculateMonthlyUploads catch: $e");
@@ -295,14 +285,12 @@ class LineChartCard extends StatelessWidget {
                       ),
                       dotData: const FlDotData(show: false),
                       spots: spots)
-                  // spots: c.spots)
                 ],
                 minX: 0,
                 maxX: 120,
                 maxY: 105,
                 minY: -5,
               ),
-              // swapAnimationDuration: const Duration(milliseconds: 250),
             ),
           ),
         ],

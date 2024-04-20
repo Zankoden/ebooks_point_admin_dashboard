@@ -17,7 +17,7 @@ class AppRoutes {
   static const String settingsPage = '/settings';
   static const String history = '/history';
   static const String signout = '/signout';
-  // static const String viewAllUsers = '/viewAllUsers';
+
   static const String viewAllEbooks = '/viewAllEbooks';
   static const String viewAuthorAllEbooks = '/viewAuthorAllEbooks';
 }
@@ -42,7 +42,6 @@ List<GetPage<dynamic>> get appPageRoute {
     ),
     GetPage(
       name: AppRoutes.viewAllEbooks,
-      // page: () => ViewAllEbooksPage(),
       page: () => ExplorePage(),
     ),
     GetPage(
@@ -51,9 +50,7 @@ List<GetPage<dynamic>> get appPageRoute {
     ),
     GetPage(
       name: AppRoutes.viewAuthorAllEbooks,
-      // page: () => ViewAllEbooksPage(),
       page: () => ViewAuthorEbooks(),
-      // page: () => TestPage(),
     ),
   ];
 }

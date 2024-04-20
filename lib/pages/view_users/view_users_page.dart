@@ -86,18 +86,100 @@ class ViewAllUsersPage extends StatelessWidget {
       appBar: AppBar(
         title: const CustomAppBarTitle(title: 'All Users'),
       ),
+      drawer: Responsive.isMobile(context)
+          ? Drawer(
+              child: SideMenuBar(),
+            )
+          : Responsive.isTablet(context)
+              ? Drawer(
+                  child: SideMenuBar(),
+                )
+              : null,
+      endDrawer: Responsive.isMobile(context)
+          ? Drawer(
+              child: ProfilePage(),
+            )
+          : Responsive.isTablet(context)
+              ? Drawer(
+                  child: ProfilePage(),
+                )
+              : null,
       body: Row(
         children: [
-          if (Responsive.isDesktop(context)) const SideMenuBar(),
+          if (Responsive.isDesktop(context)) SideMenuBar(),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _buildSearchTextField(),
+                  TextField(
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                      labelText: 'Search',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      controller.isSearched.value = true;
+                      controller.searchUsers(value);
+                    },
+                  ),
                   const SizedBox(height: 20),
-                  _buildUsersList(),
+
+                  // Expanded(
+                  //   child: Obx(
+                  //     () => ListView.builder(
+                  //       itemCount: controller.isSearched.value == false
+                  //           ? controller.users.length
+                  //           : controller.filteredUsers.length,
+                  //       itemBuilder: (context, index) {
+                  //         var user = controller.isSearched.value == false
+                  //             ? controller.users[index]
+                  //             : controller.filteredUsers[index];
+                  //         // return _buildUserListItem(user);
+                  //         return UserCard(
+                  //           user: user,
+                  //           onDelete: controller.deleteUser,
+                  //         );
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
+                  Expanded(
+                    child: Obx(
+                      () => GridView.builder(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 15),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio: Responsive.isDesktop(context)
+                              ? 0.77
+                              : Responsive.isTablet(context)
+                                  ? 0.75
+                                  : 0.62,
+                          crossAxisCount: Responsive.isDesktop(context)
+                              ? 3
+                              : Responsive.isTablet(context)
+                                  ? 3
+                                  : 2,
+                          crossAxisSpacing: 15,
+                          mainAxisSpacing: 1,
+                        ),
+                        itemCount: controller.isSearched.value == false
+                            ? controller.users.length
+                            : controller.filteredUsers.length,
+                        itemBuilder: (context, index) {
+                          var user = controller.isSearched.value == false
+                              ? controller.users[index]
+                              : controller.filteredUsers[index];
+                          return UserCard(
+                            user: user,
+                            onDelete: controller.deleteUser,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -107,95 +189,88 @@ class ViewAllUsersPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildSearchTextField() {
-    return TextField(
-      controller: searchController,
-      decoration: const InputDecoration(
-        labelText: 'Search',
-        prefixIcon: Icon(Icons.search),
-        border: OutlineInputBorder(),
-      ),
-      onChanged: (value) {
-        controller.isSearched.value = true;
-        controller.searchUsers(value);
-      },
-    );
-  }
+class UserCard extends StatelessWidget {
+  final Users user;
+  final Function(String) onDelete;
 
-  Widget _buildUsersList() {
-    return Expanded(
-      child: Obx(
-        () => ListView.builder(
-          itemCount: controller.isSearched.value == false
-              ? controller.users.length
-              : controller.filteredUsers.length,
-          itemBuilder: (context, index) {
-            var user = controller.isSearched.value == false
-                ? controller.users[index]
-                : controller.filteredUsers[index];
-            return _buildUserListItem(user);
-          },
-        ),
-      ),
-    );
-  }
+  const UserCard({
+    required this.user,
+    required this.onDelete,
+    super.key,
+  });
 
-  Widget _buildUserListItem(Users user) {
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        title: Text(
-          '${user.firstName} ${user.lastName}',
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Card(
+        elevation: 4,
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.4,
+          width: MediaQuery.of(context).size.width * 0.6,
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              CircleAvatar(
+                maxRadius: 60,
+                backgroundImage: NetworkImage(user.profileImageUrl!),
+              ),
+              const SizedBox(height: 10),
+              Flexible(
+                child: Text(
+                  '${user.firstName} ${user.lastName}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Flexible(
+                child: Text('Email: ${user.email!}'),
+              ),
+              Text("Role: ${user.type.toString()}"),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () {
+                      Get.to(() => EditUserPage(user: user));
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      Get.defaultDialog(
+                        title: 'Confirmation',
+                        middleText:
+                            'Are you sure you want to delete this user?',
+                        actions: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Get.back(); // Close the dialog
+                              onDelete(user.userId.toString());
+                            },
+                            child: const Text('Yes'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Get.back(); // Close the dialog
+                            },
+                            child: const Text('No'),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        subtitle: Text(user.email!),
-        // leading: CircleAvatar(
-        //   backgroundImage: NetworkImage(user.profileImageUrl!),
-        // ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () {
-                Get.to(() => EditUserPage(user: user));
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
-                _showDeleteConfirmationDialog(user.userId!);
-              },
-            ),
-          ],
-        ),
       ),
-    );
-  }
-
-  void _showDeleteConfirmationDialog(String userId) {
-    Get.defaultDialog(
-      title: 'Confirmation',
-      middleText: 'Are you sure you want to delete this user?',
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            Get.back(); // Close the dialog
-            controller.deleteUser(userId);
-          },
-          child: const Text('Yes'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Get.back(); // Close the dialog
-          },
-          child: const Text('No'),
-        ),
-      ],
     );
   }
 }

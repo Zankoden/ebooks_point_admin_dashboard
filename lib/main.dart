@@ -10,11 +10,3 @@ void main() async {
     MyApp(themeController: themeController),
   );
 }
-
-// extension DarkMode on BuildContext {
-//   /// is dark mode currently enabled?
-//   bool get isDarkModeHai {
-//     final brightness = MediaQuery.of(this).platformBrightness;
-//     return brightness == Brightness.dark;
-//   }
-// }

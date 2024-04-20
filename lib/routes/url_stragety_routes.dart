@@ -6,10 +6,7 @@ import 'package:flutter/material.dart';
 class URLAppRoutes {
   static final routes = <String, WidgetBuilder>{
     '/': (context) => const DashBoardPage(),
-   
     '/uploadEbook': (context) => EbookUploadPage(),
-    // '/viewAllEbooks': (context) => ViewAllEbooksPage(),
-
     '/viewAllUsers': (context) => ViewAllUsersPage(),
   };
 }

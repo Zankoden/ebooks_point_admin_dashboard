@@ -18,15 +18,13 @@ class LoginPage extends StatelessWidget {
         child: Card(
           elevation: 20,
           child: Container(
-            height: MediaQuery.of(context).size.height *
-                // 0.5, // Set width to half of the scre
-                0.6, // Set width to half of the scre
+            height: MediaQuery.of(context).size.height * 0.6,
             width: Responsive.isDesktop(context)
                 ? MediaQuery.of(context).size.width * 0.2
-                : MediaQuery.of(context).size.width *
-                    0.6, // Set width to half of the screen
+                : Responsive.isTablet(context)
+                    ? MediaQuery.of(context).size.width * 0.6
+                    : MediaQuery.of(context).size.width * 0.6,
             padding: const EdgeInsets.all(16.0),
-            // margin: const EdgeInsets.only(top: 100),
             child: Form(
               key: _formKey,
               child: ListView(
@@ -38,7 +36,7 @@ class LoginPage extends StatelessWidget {
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
-                    textAlign: TextAlign.center, // Center the text
+                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
