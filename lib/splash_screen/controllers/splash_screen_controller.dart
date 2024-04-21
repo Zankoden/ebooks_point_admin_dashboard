@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:ebooks_point_admin/pages/auth/views/login_page.dart';
 import 'package:ebooks_point_admin/dash_board_screen.dart';
+import 'package:ebooks_point_admin/pages/profile/controller/profile_controller.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,6 +18,7 @@ class SplashScreenController extends GetxController {
 
     Timer(const Duration(seconds: 2), () async {
       if (userIsLogged(userId)) {
+        Get.put(ProfileController());
         Get.offAll(const DashBoardPage());
       } else {
         Get.offAll(LoginPage());

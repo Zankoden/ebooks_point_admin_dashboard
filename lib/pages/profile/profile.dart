@@ -88,11 +88,6 @@ class ProfilePage extends StatelessWidget {
             SizedBox(
               height: 300,
               width: 300,
-              // decoration: const BoxDecoration(
-              //   image: DecorationImage(
-              //       image: NetworkImage("profile_image/profile_avatar.png"),
-              //       fit: BoxFit.fill),
-              // ),
               child: Image.asset(
                 "profile_image/profile_avatar.png",
                 fit: BoxFit.fill,

@@ -90,6 +90,7 @@ class ExplorePage extends StatelessWidget {
                                 scrollDirection: Axis.horizontal,
                                 itemCount: controller.categories.length,
                                 itemBuilder: (context, index) {
+                                  
                                   return Row(
                                     children: controller.categories
                                         .map(
@@ -97,6 +98,7 @@ class ExplorePage extends StatelessWidget {
                                             padding: const EdgeInsets.only(
                                                 right: 8.0),
                                             child: FilterChip(
+                                              
                                               label: Text(
                                                   category.categoryName ?? ''),
                                               onSelected: (selected) {

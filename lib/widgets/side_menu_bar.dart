@@ -1,31 +1,64 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'package:http/http.dart' as http;
+import 'package:ebooks_point_admin/api/api_services.dart';
 import 'package:ebooks_point_admin/model/side_menu_items.dart';
-import 'package:ebooks_point_admin/pages/profile/controller/profile_controller.dart';
 import 'package:ebooks_point_admin/pages/view_users/view_users_page.dart';
 import 'package:ebooks_point_admin/routes/router.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SideMenuBar extends StatelessWidget {
-  SideMenuBar({super.key});
+class SideMenuBarController extends GetxController {
+  Rx<Map<String, dynamic>?> userInfo = Rx<Map<String, dynamic>?>(null);
 
-  final c = Get.put(ProfileController());
+  late final List<SideMenuItems> menuItems;
+
+  late final BuildContext context;
+
+  SideMenuBarController(this.context);
 
   @override
-  Widget build(BuildContext context) {
-    // final bool isAdmin = c.userInfo.value!['type'] == 'admin';
-    // final bool isAuthor = c.userInfo.value!['type'] == 'author';
+  void onInit() {
+    super.onInit();
+    getUserInfo();
+  }
 
-    final bool isAdmin =
-        c.userInfo.value != null && c.userInfo.value!['type'] == 'admin';
-    final bool isAuthor =
-        c.userInfo.value != null && c.userInfo.value!['type'] == 'author';
+  Future<void> getUserInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? userId = prefs.getInt('user_id');
+    log(userId.toString());
+    if (userId != null) {
+      userInfo.value = null;
 
-    if (c.userInfo.value == null || c.userInfo.value!.isEmpty) {
-      return const CircularProgressIndicator();
+      final response = await http.post(
+        Uri.parse(APIService.getUserInfo),
+        body: {
+          'user_id': userId.toString(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        if (data['success']) {
+          userInfo.value = data['user_info'];
+          log("Getting the type: ${userInfo.value!['type']}");
+          initializeMenuItems();
+        } else {
+          log('Failed to get user info: ${data['message']}');
+        }
+      } else {
+        log('Failed to get user info');
+      }
     }
+  }
 
-    final List<SideMenuItems> menuItems = [
+  void initializeMenuItems() {
+    final bool isAdmin = userInfo.value!['type'] == 'admin';
+    final bool isAuthor = userInfo.value!['type'] == 'author';
+
+    menuItems = [
       SideMenuItems(
         title: 'Home',
         icon: FluentIcons.home_12_regular,
@@ -48,7 +81,6 @@ class SideMenuBar extends StatelessWidget {
           icon: FluentIcons.book_16_regular,
           onTap: () {
             Navigator.pushNamed(context, AppRoutes.viewAllEbooks);
-            // Get.put(ExplorePageController());
           },
           index: 2,
         ),
@@ -65,39 +97,49 @@ class SideMenuBar extends StatelessWidget {
           icon: FluentIcons.book_16_regular,
           onTap: () {
             Navigator.pushNamed(context, AppRoutes.viewAuthorAllEbooks);
-            // Get.put(ViewAuthorEbooksController());
           },
           index: 2,
         ),
     ];
-    return Card(
-      elevation: 5,
-      child: Container(
-        width: 250,
-        decoration: const BoxDecoration(
-            // color: Color(0xFF21222D),
-            // color: Color(0xFF171821),
-            // color: Colors.grey[200],
-            // border: Border.all(color: Colors.grey[300]!),
+  }
+}
+
+class SideMenuBar extends StatelessWidget {
+  SideMenuBar({super.key});
+
+  final controller = Get.put(SideMenuBarController(Get.context!));
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      if (controller.userInfo.value == null) {
+        return const CircularProgressIndicator();
+      } else {
+        return Card(
+          elevation: 5,
+          child: Container(
+            width: 250,
+            decoration: const BoxDecoration(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                Divider(color: Colors.grey[300]),
+                for (int i = 0; i < controller.menuItems.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: SideMenuItems(
+                      title: controller.menuItems[i].title,
+                      icon: controller.menuItems[i].icon,
+                      onTap: controller.menuItems[i].onTap,
+                      index: i,
+                    ),
+                  ),
+              ],
             ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            Divider(color: Colors.grey[300]),
-            for (int i = 0; i < menuItems.length; i++)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: SideMenuItems(
-                  title: menuItems[i].title,
-                  icon: menuItems[i].icon,
-                  onTap: menuItems[i].onTap, // Directly call onTap function
-                  index: i, // Pass the index here
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
+          ),
+        );
+      }
+    });
   }
 }

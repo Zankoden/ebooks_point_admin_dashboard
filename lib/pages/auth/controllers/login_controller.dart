@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:ebooks_point_admin/pages/auth/views/login_page.dart';
 import 'package:ebooks_point_admin/dash_board_screen.dart';
+import 'package:ebooks_point_admin/pages/profile/controller/profile_controller.dart';
 import 'package:http/http.dart' as http;
 import 'package:ebooks_point_admin/api/api_services.dart';
 import 'package:flutter/material.dart';
@@ -30,17 +31,15 @@ class LoginController extends GetxController {
       final responseData = json.decode(response.body);
 
       if (responseData['success']) {
-        Get.snackbar("Success", "Logged in Successfully");
         final userId = responseData['user_id'];
         await saveSession(userId);
+        Get.put(ProfileController());
+        Get.snackbar("Success", "Logged in Successfully");
 
-        
         _startSessionTimer();
 
-        
         Get.offAll(() => const DashBoardPage());
       } else {
-        
         final errorMessage = responseData['message'];
         if (errorMessage == 'Incorrect password.') {
           Get.snackbar(
@@ -60,10 +59,8 @@ class LoginController extends GetxController {
         }
       }
     } on SocketException {
-      
       Get.snackbar('Error', 'Please check your internet connection.');
     } catch (e) {
-      
       Get.snackbar('Error', 'An error occurred while logging in.');
     }
   }
@@ -76,24 +73,21 @@ class LoginController extends GetxController {
   }
 
   void _startSessionTimer() {
-    const sessionDuration = Duration(days: 365); 
+    const sessionDuration = Duration(days: 365);
     _sessionTimer = Timer(sessionDuration, _logoutUser);
   }
 
   void _logoutUser() {
-    
     SharedPreferences.getInstance().then((prefs) {
       prefs.remove('user_id');
     });
 
-    
     Get.offAll(() => LoginPage());
   }
 
   @override
   void onClose() {
     super.onClose();
-    _sessionTimer
-        ?.cancel(); 
+    _sessionTimer?.cancel();
   }
 }

@@ -7,22 +7,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class ProfileController extends GetxController {
-  
-  Rx<Map<String, dynamic>?> userInfo = Rx<Map<String, dynamic>?>(
-      null); 
+  Rx<Map<String, dynamic>?> userInfo = Rx<Map<String, dynamic>?>(null);
 
   @override
   void onInit() {
     super.onInit();
     getUserInfo();
+    update();
   }
 
   Future<void> getUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? userId = prefs.getInt('user_id');
-
+    log(userId.toString());
     if (userId != null) {
-      
       userInfo.value = null;
 
       final response = await http.post(
@@ -32,13 +30,10 @@ class ProfileController extends GetxController {
         },
       );
 
-      
-
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
         if (data['success']) {
-          userInfo.value =
-              data['user_info']; 
+          userInfo.value = data['user_info'];
         } else {
           log('Failed to get user info: ${data['message']}');
         }

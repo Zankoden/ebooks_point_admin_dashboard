@@ -3,7 +3,13 @@ import 'package:get/get.dart';
 
 class SideMenuController extends GetxController {
   RxInt hoveredIndex = (-1).obs;
-  RxList<bool> isClickedList = <bool>[false, false, false, false, false].obs;
+  RxList<bool> isClickedList = <bool>[
+    false,
+    false,
+    false,
+    false,
+    false,
+  ].obs;
   RxInt selectedIndex = (-1).obs;
 
   void onHover(int index) {
