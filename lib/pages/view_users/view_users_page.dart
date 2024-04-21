@@ -11,6 +11,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:image_network/image_network.dart';
+
 class ViewAllUsersPageController extends GetxController {
   var users = <Users>[].obs;
   var filteredUsers = <Users>[].obs;
@@ -213,10 +215,12 @@ class UserCard extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 20),
-              CircleAvatar(
-                maxRadius: 60,
-                backgroundImage: NetworkImage(user.profileImageUrl!),
-              ),
+              ImageNetwork(
+                  image: user.profileImageUrl!, height: 130, width: 130),
+              // CircleAvatar(
+              //   maxRadius: 60,
+              //   backgroundImage: NetworkImage(user.profileImageUrl!),
+              // ),
               const SizedBox(height: 10),
               Flexible(
                 child: Text(

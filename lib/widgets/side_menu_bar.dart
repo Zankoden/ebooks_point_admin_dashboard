@@ -72,6 +72,7 @@ class SideMenuBarController extends GetxController {
           onTap: () {
             Navigator.pushNamed(context, AppRoutes.viewAllUsersPage);
             Get.put(ViewAllUsersPageController());
+            
           },
           index: 1,
         ),
