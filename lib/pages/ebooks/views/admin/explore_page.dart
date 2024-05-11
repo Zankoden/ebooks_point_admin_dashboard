@@ -88,29 +88,60 @@ class ExplorePage extends StatelessWidget {
                             child: Obx(
                               () => ListView.builder(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: controller.categories.length,
+                                itemCount: controller.categories.length + 1,
                                 itemBuilder: (context, index) {
-                                  
-                                  return Row(
-                                    children: controller.categories
-                                        .map(
-                                          (category) => Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 8.0),
-                                            child: FilterChip(
-                                              
-                                              label: Text(
-                                                  category.categoryName ?? ''),
-                                              onSelected: (selected) {
-                                                controller.filterByCategory(
-                                                  category.categoryName!,
-                                                );
-                                              },
-                                            ),
+                                  if (index == 0) {
+                                    return Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                        child: Obx(
+                                          () => FilterChip(
+                                            selected: controller
+                                                    .isSelectedMap['All'] ??
+                                                false,
+                                            label: const Text('All'),
+                                            onSelected: (bool value) {
+                                              for (var key in controller
+                                                  .isSelectedMap.keys) {
+                                                controller.isSelectedMap[key] =
+                                                    false;
+                                              }
+                                              controller.isSelectedMap['All'] =
+                                                  true;
+
+                                              controller.displayList.value =
+                                                  controller.books.toList();
+                                            },
                                           ),
-                                        )
-                                        .toList(),
-                                  );
+                                        ));
+                                  } else {
+                                    final category =
+                                        controller.categories[index - 1];
+                                    return Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                        child: Obx(
+                                          () => FilterChip(
+                                            selected: controller.isSelectedMap[
+                                                    category.categoryName ??
+                                                        ''] ??
+                                                false,
+                                            label: Text(
+                                                category.categoryName ?? ''),
+                                            onSelected: (bool value) {
+                                              for (var key in controller
+                                                  .isSelectedMap.keys) {
+                                                controller.isSelectedMap[key] =
+                                                    false;
+                                              }
+                                              controller.isSelectedMap[category
+                                                  .categoryName!] = true;
+                                              controller.filterByCategory(
+                                                  category.categoryName!);
+                                            },
+                                          ),
+                                        ));
+                                  }
                                 },
                               ),
                             ),

@@ -23,6 +23,9 @@ class ViewAuthorEbooksController extends GetxController {
   RxList<Ebook> recommendedBooksList = <Ebook>[].obs;
   RxList<Ebook> recommendedCategoryList = <Ebook>[].obs;
 
+   RxBool isSelected = false.obs;
+  RxMap<String, bool> isSelectedMap = <String, bool>{}.obs;
+
   @override
   void onInit() {
     super.onInit();

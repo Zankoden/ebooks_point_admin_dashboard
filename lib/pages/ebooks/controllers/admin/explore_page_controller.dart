@@ -20,6 +20,9 @@ class ExplorePageController extends GetxController {
   RxList<Ebook> recommendedBooksList = <Ebook>[].obs;
   RxList<Ebook> recommendedCategoryList = <Ebook>[].obs;
 
+  RxBool isSelected = false.obs;
+  RxMap<String, bool> isSelectedMap = <String, bool>{}.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -27,6 +30,7 @@ class ExplorePageController extends GetxController {
     getCategories();
     getRecommendedBooks();
     getRecommendedCategoryBooks();
+    initializeSelectedMap();
   }
 
   Future<List<Ebook>> fetchEbooks() async {
@@ -114,6 +118,12 @@ class ExplorePageController extends GetxController {
                       (category) => category.categoryName == categoryName)
                   .categoryId)
           .toList();
+    }
+  }
+
+  void initializeSelectedMap() {
+    for (var category in categories) {
+      isSelectedMap[category.categoryName ?? ''] = false;
     }
   }
 
