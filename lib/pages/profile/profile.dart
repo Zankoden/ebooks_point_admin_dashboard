@@ -5,6 +5,7 @@ import 'package:ebooks_point_admin/themes/controller/theme_controller.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_network/image_network.dart';
 
 class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
@@ -90,14 +91,21 @@ class ProfilePage extends StatelessWidget {
               width: 300,
               child: Image.asset(
                 "profile_image/profile_avatar.png",
+                width: Responsive.bookImageWidth(context) * 0.85,
+                height: Responsive.bookImageHeight(context) * 0.85,
                 fit: BoxFit.fill,
                 errorBuilder: (BuildContext context, Object exception,
                     StackTrace? stackTrace) {
-                  return Image.asset(
-                    'assets/default_img.jpg',
-                    width: Responsive.bookImageWidth(context),
+                  return Container(
+                    width: Responsive.bookImageWidth(context) * 0.85,
                     height: Responsive.bookImageHeight(context) * 0.85,
-                    fit: BoxFit.cover,
+                    decoration: BoxDecoration(
+                      image: const DecorationImage(
+                        image: AssetImage('assets/default_img.jpg'),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(600),
+                    ),
                   );
                 },
               ),
