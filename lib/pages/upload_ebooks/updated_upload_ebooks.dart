@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:ebooks_point_admin/api/api_services.dart';
 import 'package:ebooks_point_admin/model/category_model.dart';
+import 'package:ebooks_point_admin/pages/ebooks/controllers/author/view_author_ebooks_controller.dart';
 import 'package:ebooks_point_admin/pages/profile/profile.dart';
 import 'package:ebooks_point_admin/responsive.dart';
 import 'package:ebooks_point_admin/widgets/custom_app_bar_title.dart';
@@ -208,6 +209,10 @@ class EbookUploadController extends GetxController {
 class EbookUploadPage extends StatelessWidget {
   final EbookUploadController controller = Get.put(EbookUploadController());
 
+//for refreshing ebooks
+  final ViewAuthorEbooksController viewAuthorEbooksController =
+      Get.put(ViewAuthorEbooksController());
+
   EbookUploadPage({super.key});
 
   @override
@@ -313,7 +318,11 @@ class EbookUploadPage extends StatelessWidget {
                             //   child: const Text('Upload Ebook'),
                             // ),
                             _buildElevatedButton(
-                              onPressed: () => controller.uploadEbook(),
+                              onPressed: () {
+                                controller.uploadEbook();
+                                viewAuthorEbooksController.books;
+                                Get.toNamed("/");
+                              },
                               label: 'Upload Ebook',
                               isLoading: controller.isUploading.value,
                             ),

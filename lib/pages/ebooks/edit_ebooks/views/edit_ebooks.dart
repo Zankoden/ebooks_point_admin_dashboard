@@ -15,7 +15,6 @@ class EditEbookPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(EditEbookPageController());
 
-    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.fetchEbookDetails(ebookId);
     });
@@ -25,7 +24,7 @@ class EditEbookPage extends StatelessWidget {
         title: const CustomAppBarTitle(title: "Edit Ebook Details"),
       ),
       drawer: Responsive.isMobile(context)
-          ?  Drawer(
+          ? Drawer(
               child: SideMenuBar(),
             )
           : null,
@@ -36,7 +35,7 @@ class EditEbookPage extends StatelessWidget {
           : null,
       body: Row(
         children: [
-          if (Responsive.isDesktop(context))  SideMenuBar(),
+          if (Responsive.isDesktop(context)) SideMenuBar(),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -61,6 +60,7 @@ class EditEbookPage extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       controller.updateEbookDetails(ebookId);
+                      Get.toNamed("/");
                     },
                     child: const Text('Save Changes'),
                   ),

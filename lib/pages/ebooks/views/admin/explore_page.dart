@@ -242,6 +242,7 @@ class SearchGridCell extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: ImageNetwork(
+                key: UniqueKey(),
                 image: imagePath,
                 height: Responsive.bookImageHeight(context),
                 width: Responsive.bookImageWidth(context),
@@ -304,7 +305,7 @@ class SearchGridCell extends StatelessWidget {
   }
 
   void _showDeleteConfirmationDialog(BuildContext context, int ebookId) {
-    final controller = Get.find<ExplorePageController>();
+    final explorePageController = Get.put(ExplorePageController());
 
     showDialog(
       context: context,
@@ -315,8 +316,8 @@ class SearchGridCell extends StatelessWidget {
           actions: [
             ElevatedButton(
               onPressed: () {
-                controller.deleteEbook(ebookId);
-                Navigator.of(context).pop();
+                explorePageController.deleteEbook(ebookId);
+                Get.toNamed("/");
               },
               child: const Text('Yes'),
             ),

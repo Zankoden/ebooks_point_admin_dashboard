@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:ebooks_point_admin/pages/ebooks/controllers/admin/explore_page_controller.dart';
+import 'package:ebooks_point_admin/pages/ebooks/controllers/author/view_author_ebooks_controller.dart';
 import 'package:http/http.dart' as http;
 import 'package:ebooks_point_admin/api/api_services.dart';
 import 'package:ebooks_point_admin/model/side_menu_items.dart';
@@ -72,7 +74,6 @@ class SideMenuBarController extends GetxController {
           onTap: () {
             Navigator.pushNamed(context, AppRoutes.viewAllUsersPage);
             Get.put(ViewAllUsersPageController());
-            
           },
           index: 1,
         ),
@@ -82,6 +83,7 @@ class SideMenuBarController extends GetxController {
           icon: FluentIcons.book_16_regular,
           onTap: () {
             Navigator.pushNamed(context, AppRoutes.viewAllEbooks);
+            Get.put(ExplorePageController());
           },
           index: 2,
         ),
@@ -98,6 +100,8 @@ class SideMenuBarController extends GetxController {
           icon: FluentIcons.book_16_regular,
           onTap: () {
             Navigator.pushNamed(context, AppRoutes.viewAuthorAllEbooks);
+            // Get.put(ViewAuthorEbooksController());
+            Get.find<ViewAuthorEbooksController>().fetchEbooks();
           },
           index: 2,
         ),

@@ -12,10 +12,8 @@ class ViewAuthorEbooksController extends GetxController {
   TextEditingController searchController = TextEditingController();
   RxList<Ebook> books = <Ebook>[].obs;
   RxList<Ebook> displayList = <Ebook>[].obs;
-  RxList<Ebook> searchOnlyItemsList =
-      <Ebook>[].obs; 
+  RxList<Ebook> searchOnlyItemsList = <Ebook>[].obs;
 
-  
   RxList<Category> categories = <Category>[].obs;
 
   RxList<Ebook> premiumBooks = <Ebook>[].obs;
@@ -23,7 +21,7 @@ class ViewAuthorEbooksController extends GetxController {
   RxList<Ebook> recommendedBooksList = <Ebook>[].obs;
   RxList<Ebook> recommendedCategoryList = <Ebook>[].obs;
 
-   RxBool isSelected = false.obs;
+  RxBool isSelected = false.obs;
   RxMap<String, bool> isSelectedMap = <String, bool>{}.obs;
 
   @override
@@ -49,20 +47,13 @@ class ViewAuthorEbooksController extends GetxController {
         },
       );
 
-      
-      
-      
-      
-      
-      
+      log("The authors's book: ${response.body}");
 
       if (response.statusCode == 200) {
         var jsonData = jsonDecode(response.body);
         if (jsonData is List) {
-          
           return jsonData.map((ebook) => Ebook.fromJson(ebook)).toList();
         } else if (jsonData is Map) {
-          
           return [Ebook.fromJson(jsonData as Map<String, dynamic>)];
         } else {
           throw Exception('Invalid response format');
@@ -109,20 +100,17 @@ class ViewAuthorEbooksController extends GetxController {
   }
 
   void updateList(String value) {
-    
     searchOnlyItemsList.value = books
         .where((element) =>
             element.title != null &&
             element.title!.toLowerCase().contains(value.toLowerCase()))
         .toList();
 
-    
     displayList.value = value.isEmpty ? books : searchOnlyItemsList;
   }
 
   void filterByCategory(String categoryName) {
     if (searchController.text.isEmpty) {
-      
       displayList.value = books
           .where((element) =>
               element.categoryId ==
@@ -132,7 +120,6 @@ class ViewAuthorEbooksController extends GetxController {
                   .categoryId)
           .toList();
     } else {
-      
       final List<Ebook> sourceList =
           searchOnlyItemsList.isNotEmpty ? searchOnlyItemsList : books;
       displayList.value = sourceList
@@ -146,14 +133,13 @@ class ViewAuthorEbooksController extends GetxController {
     }
   }
 
-  
   void getRecommendedBooks() {
     getBooks();
     log("--------start of getRecommendedBooks-----🔥------------");
     log("Recommended list: $recommendedBooksList");
     if (books.isEmpty) return;
 
-    recommendedBooksList.clear(); 
+    recommendedBooksList.clear();
 
     for (Ebook ebook in books) {
       double totalRating = 0;
@@ -177,17 +163,13 @@ class ViewAuthorEbooksController extends GetxController {
     log("Recommended list: $recommendedBooksList");
   }
 
-  
   void getRecommendedCategoryBooks() {
     log("-------------🔥----start of getRecommendedCategoryBooks--------");
     if (books.isEmpty) return;
 
-    Map<int, List<double>> categoryRatings =
-        {}; 
-    Map<int, int> categoryBookCounts =
-        {}; 
+    Map<int, List<double>> categoryRatings = {};
+    Map<int, int> categoryBookCounts = {};
 
-    
     for (Ebook ebook in books) {
       int categoryId = ebook.categoryId ?? -1;
       double totalRating = 0;
@@ -203,7 +185,6 @@ class ViewAuthorEbooksController extends GetxController {
       if (numRatings > 0) {
         double avgRating = totalRating / numRatings;
 
-        
         if (!categoryRatings.containsKey(categoryId)) {
           categoryRatings[categoryId] = [avgRating];
           categoryBookCounts[categoryId] = 1;
@@ -215,20 +196,17 @@ class ViewAuthorEbooksController extends GetxController {
       }
     }
 
-    
     for (int categoryId in categoryRatings.keys) {
       double avgRating = categoryRatings[categoryId]!.reduce((a, b) => a + b) /
           categoryRatings[categoryId]!.length;
       int bookCount = categoryBookCounts[categoryId]!;
 
       if (avgRating >= 4.0 && bookCount >= 3) {
-        
         recommendedCategoryList
             .addAll(books.where((ebook) => ebook.categoryId == categoryId));
       }
     }
 
-    
     recommendedCategoryList = recommendedCategoryList.toSet().toList().obs;
 
     log("Recommended Category list: $recommendedCategoryList");
@@ -241,7 +219,6 @@ class ViewAuthorEbooksController extends GetxController {
         body: {'ebook_id': ebookId.toString()},
       );
       if (response.statusCode == 200) {
-        
         fetchEbooks();
       } else {
         log('Failed to delete ebook.');

@@ -1,3 +1,4 @@
+import 'package:ebooks_point_admin/api/api_services.dart';
 import 'package:ebooks_point_admin/constants/text_strings.dart';
 import 'package:ebooks_point_admin/pages/profile/controller/profile_controller.dart';
 import 'package:ebooks_point_admin/responsive.dart';
@@ -89,26 +90,33 @@ class ProfilePage extends StatelessWidget {
             SizedBox(
               height: 300,
               width: 300,
-              child: Image.asset(
-                "profile_image/profile_avatar.png",
+              child: ImageNetwork(
+                key: UniqueKey(),
+                image: "${APIService.baseURL}/${userInfo['profile_image_url']}",
                 width: Responsive.bookImageWidth(context) * 0.85,
                 height: Responsive.bookImageHeight(context) * 0.85,
-                fit: BoxFit.fill,
-                errorBuilder: (BuildContext context, Object exception,
-                    StackTrace? stackTrace) {
-                  return Container(
-                    width: Responsive.bookImageWidth(context) * 0.85,
-                    height: Responsive.bookImageHeight(context) * 0.85,
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
-                        image: AssetImage('assets/default_img.jpg'),
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadius.circular(600),
-                    ),
-                  );
-                },
               ),
+              // child: Image.network(
+              //   // "profile_image/profile_avatar.png",
+              //   "${APIService.baseURL}/${userInfo['profile_image_url']}",
+              //   width: Responsive.bookImageWidth(context) * 0.85,
+              //   height: Responsive.bookImageHeight(context) * 0.85,
+              //   fit: BoxFit.fill,
+              //   errorBuilder: (BuildContext context, Object exception,
+              //       StackTrace? stackTrace) {
+              //     return Container(
+              //       width: Responsive.bookImageWidth(context) * 0.85,
+              //       height: Responsive.bookImageHeight(context) * 0.85,
+              //       decoration: BoxDecoration(
+              //         image: const DecorationImage(
+              //           image: AssetImage('assets/default_img.jpg'),
+              //           fit: BoxFit.cover,
+              //         ),
+              //         borderRadius: BorderRadius.circular(600),
+              //       ),
+              //     );
+              //   },
+              // ),
             ),
             const SizedBox(
               height: 15,

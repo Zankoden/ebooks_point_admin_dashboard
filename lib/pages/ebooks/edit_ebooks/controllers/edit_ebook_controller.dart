@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:ebooks_point_admin/api/api_services.dart';
-import 'package:ebooks_point_admin/pages/ebooks/controllers/admin/explore_page_controller.dart';
 import 'package:ebooks_point_admin/routes/router.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -53,7 +52,7 @@ class EditEbookPageController extends GetxController {
         if (responseData['success']) {
           Get.toNamed(AppRoutes.viewAllEbooks);
 
-          Get.find<ExplorePageController>().fetchEbooks();
+          // Get.find<ExplorePageController>().fetchEbooks();
 
           Get.snackbar('Success', responseData['message']);
         } else {

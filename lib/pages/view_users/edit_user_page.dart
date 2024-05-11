@@ -69,7 +69,7 @@ class EditUserPage extends StatelessWidget {
       ),
       body: Row(
         children: [
-          if (Responsive.isDesktop(context))  SideMenuBar(),
+          if (Responsive.isDesktop(context)) SideMenuBar(),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -92,6 +92,7 @@ class EditUserPage extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       controller.updateUserDetails(user.userId!);
+                      Get.toNamed("/");
                     },
                     child: const Text('Save Changes'),
                   ),

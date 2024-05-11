@@ -216,7 +216,10 @@ class UserCard extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
               ImageNetwork(
-                  image: user.profileImageUrl!, height: 130, width: 130),
+                  key: UniqueKey(),
+                  image: user.profileImageUrl!,
+                  height: 130,
+                  width: 130),
               // CircleAvatar(
               //   maxRadius: 60,
               //   backgroundImage: NetworkImage(user.profileImageUrl!),
@@ -254,8 +257,8 @@ class UserCard extends StatelessWidget {
                         actions: [
                           ElevatedButton(
                             onPressed: () {
-                              Get.back(); // Close the dialog
                               onDelete(user.userId.toString());
+                              Get.toNamed("/");
                             },
                             child: const Text('Yes'),
                           ),
